@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name="funcionario")
+@Entity(name = "funcionario")
 public class Funcionario {
 
     @Id

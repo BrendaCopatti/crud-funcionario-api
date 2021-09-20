@@ -4,6 +4,7 @@ import com.brendacopatti.crudfuncionarioapi.features.funcionario.validators.Func
 import com.brendacopatti.crudfuncionarioapi.features.funcionario.validators.FuncionarioNisValidator;
 import com.brendacopatti.crudfuncionarioapi.features.funcionario.validators.FuncionarioNomeValidator;
 import com.brendacopatti.crudfuncionarioapi.features.funcionario.validators.FuncionarioSobrenomeValidator;
+import org.hibernate.PropertyValueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestClientException;
 
@@ -36,7 +37,15 @@ public class FuncionarioBean {
 
     public Funcionario post(Funcionario funcionario) {
         this.executaValidacoesFuncionario(funcionario);
-        return repository.save(funcionario);
+        try {
+            return repository.save(funcionario);
+        } catch (Exception ex) {
+            if (ex.getCause().getClass() == PropertyValueException.class) {
+                PropertyValueException propertyValueException = (PropertyValueException) ex.getCause();
+                throw new RestClientException("O campo " + propertyValueException.getPropertyName() + " deve possuir um valor válido.");
+            }
+            throw new RestClientException("Erro ao gravar funcionário: " + ex.getMessage());
+        }
     }
 
     public List<Funcionario> getAll() {
@@ -55,7 +64,15 @@ public class FuncionarioBean {
             throw new RestClientException("Não foi encontrado registro com o identificador informado.");
         }
         this.executaValidacoesFuncionario(funcionario);
-        return repository.save(funcionario);
+        try {
+            return repository.save(funcionario);
+        } catch (Exception ex) {
+            if (ex.getCause().getClass() == PropertyValueException.class) {
+                PropertyValueException propertyValueException = (PropertyValueException) ex.getCause();
+                throw new RestClientException("O campo " + propertyValueException.getPropertyName() + " deve possuir um valor válido.");
+            }
+            throw new RestClientException("Erro ao gravar funcionário: " + ex.getMessage());
+        }
     }
 
     public void delete(Long id) {

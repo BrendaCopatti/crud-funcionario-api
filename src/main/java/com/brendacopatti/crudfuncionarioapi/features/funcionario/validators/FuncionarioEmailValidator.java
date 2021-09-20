@@ -7,14 +7,18 @@ import javax.annotation.ManagedBean;
 
 /**
  * Realiza validação da regra de E-mail
- * - deve ser um E-mail valido
- * - deve possuir no máximo 100 caracteres (regra adicionada por conta de limitação no campo do banco)
+ * - Deve ser um E-mail valido
+ * - Deve possuir no máximo 100 caracteres (regra adicionada por conta de limitação no campo do banco)
  *
  * @author Brenda
  */
 @ManagedBean
 public class FuncionarioEmailValidator {
     public void execute(String email) {
+        if (email == null) {
+            return;
+        }
+
         if (email.length() > 100) {
             throw new RestClientException("O E-mail deve possuir no máximo 100 caracteres.");
         }
